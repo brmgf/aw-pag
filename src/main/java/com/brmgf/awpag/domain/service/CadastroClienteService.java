@@ -3,15 +3,20 @@ package com.brmgf.awpag.domain.service;
 import com.brmgf.awpag.domain.exception.AwpagException;
 import com.brmgf.awpag.domain.model.Cliente;
 import com.brmgf.awpag.domain.repository.ClienteRepository;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Service
 public class CadastroClienteService {
 
     private final ClienteRepository clienteRepository;
+
+    @Transactional(readOnly = true)
+    public Cliente buscar(Long clienteId) {
+        return clienteRepository.findById(clienteId).orElseThrow(() -> new AwpagException("Cliente não encontrado"));
+    }
 
     @Transactional
     public Cliente salvar(Cliente cliente) {
