@@ -1,7 +1,10 @@
 package com.brmgf.awpag.api.controller;
 
+import com.brmgf.awpag.domain.exception.AwpagException;
 import com.brmgf.awpag.domain.model.Cliente;
 import com.brmgf.awpag.domain.repository.ClienteRepository;
+import com.brmgf.awpag.domain.service.CadastroClienteService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import java.util.Optional;
 @RestController
 public class ClienteController {
 
+    private final CadastroClienteService cadastroClienteService;
     private final ClienteRepository clienteRepository;
 
     @GetMapping
@@ -35,18 +39,18 @@ public class ClienteController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Cliente adicionar(@RequestBody Cliente cliente) {
-        return clienteRepository.save(cliente);
+    public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
+        return cadastroClienteService.salvar(cliente);
     }
 
     @PutMapping("/{clienteId}")
-    public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteId, @RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteId, @Valid @RequestBody Cliente cliente) {
         if (!clienteRepository.existsById(clienteId)) {
             return ResponseEntity.notFound().build();
         }
 
         cliente.setId(clienteId);
-        cliente = clienteRepository.save(cliente);
+        cliente = cadastroClienteService.salvar(cliente);
         return ResponseEntity.ok(cliente);
     }
 
@@ -56,7 +60,12 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
         }
 
-        clienteRepository.deleteById(clienteId);
+        cadastroClienteService.excluir(clienteId);
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(AwpagException.class)
+    public ResponseEntity<String> capturarExcecoes(AwpagException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

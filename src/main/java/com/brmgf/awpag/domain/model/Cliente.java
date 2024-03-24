@@ -1,6 +1,9 @@
 package com.brmgf.awpag.domain.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,13 +19,17 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 60)
+    @NotBlank
+    @Size(max = 60)
     private String nome;
 
-    @Column(length = 255)
+    @NotBlank
+    @Size(max = 255)
+    @Email
     private String email;
 
-    @Column(length = 20)
+    @NotBlank
+    @Size(max = 20)
     private String telefone;
 
 }
