@@ -64,8 +64,4 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(AwpagException.class)
-    public ResponseEntity<String> capturarExcecoes(AwpagException exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
-    }
 }

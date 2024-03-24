@@ -38,8 +38,4 @@ public class ParcelamentoController {
         return parcelamentoService.salvar(novoParcelamento);
     }
 
-    @ExceptionHandler(AwpagException.class)
-    public ResponseEntity<String> capturarExcecoes(AwpagException exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
-    }
 }
